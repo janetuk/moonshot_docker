@@ -1,0 +1,54 @@
+ARG DEBIMAGE=debian:8
+FROM $DEBIMAGE
+
+ARG REPO
+ARG DEBIANCODENAME=jessie
+ENV DEBIAN_FRONTEND noninteractive
+RUN set -x \
+    && apt-get -y update && apt-get -y install curl sudo gnupg \
+    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
+    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && apt-get -y update \
+    && apt-get -y install moonshot-ui
+RUN apt-get -y install moonshot-gss-eap
+RUN apt-get -y install moonshot-trust-router
+RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp
+COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/idp_users.txt /
+RUN set -x \
+    && cp /radsec.conf /etc \
+    && sed -i "s/RPP/127.0.0.1/g" /etc/radsec.conf \
+    && adduser trustrouter freerad \
+    && adduser freerad trustrouter \
+    && echo "\$INCLUDE idp_users.txt" >> /etc/freeradius/users \
+    && sed -i "/listen.*/a \
+               limit {\n \
+                   max_connections = 128\n \
+               }" /etc/freeradius/sites-available/abfab-tls \
+    && sed -i "/post-auth {/a \
+                update outer.session-state { \n\
+                  User-Name := &User-Name \n\
+                }" /etc/freeradius/sites-available/inner-tunnel \
+    && sed -i "/proto = tls/a \
+               gss_acceptor_realm_name = IDP_REALM\n \
+               limit {\n \
+                   max_connections = 128\n \
+               }" /etc/freeradius/sites-available/abfab-tls \
+    && sed -i "/proxy server {/a dynamic = yes" /etc/freeradius/proxy.conf \
+    && sed -i "/post-auth {/a moonshot_saml" /etc/freeradius/sites-available/abfab-tr-idp \
+    && ln -s /etc/freeradius/mods-available/moonshot_totp /etc/freeradius/mods-enabled/ \
+    && sed -i "/pap/a moonshot_totp" /etc/freeradius/sites-available/inner-tunnel \
+    && cp /moonshot_saml /etc/freeradius/policy.d/ \
+    && cp /idp_users.txt /etc/freeradius/mods-config/files/
+CMD sudo -u freerad -H -- moonshot-webp -f credential.xml \
+    && echo "realm $IDP_REALM {}" >> /etc/freeradius/proxy.conf \
+    && sed -i "s/IDP_REALM/$IDP_REALM/g" /etc/freeradius/sites-available/abfab-tls \
+    && sed -i "s/^rfc7542_realms.*/rfc7542_realms=\'example.com|$IDP_REALM\'/g" /etc/freeradius/policy.d/rfc7542 \
+    && sed -i "/delimiter = \"[@\!]\"/a \
+              trust_router = $TR_HOSTNAME\n \
+              tr_port = 12309\n \
+              rp_realm = $IDP_REALM\n \
+              default_community = $APC_REALM\n \
+              rekey_enabled = yes" /etc/freeradius/mods-available/realm \
+    && chown freerad /etc/freeradius/certs/* \
+    && sudo -u trustrouter -H -b -- tids $TR_GSSNAME \
+    && sudo -u freerad -H -- freeradius -fxx -lstdout

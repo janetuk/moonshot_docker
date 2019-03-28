@@ -1,0 +1,3 @@
+tr           Cleartext-Password := "trpwd"
+test1.org    Cleartext-Password := "test1.org"
+test2.org    Cleartext-Password := "test2.org"

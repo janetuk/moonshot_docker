@@ -1,0 +1,39 @@
+ARG DEBIMAGE=debian:8
+FROM $DEBIMAGE
+ARG REPO
+ARG DEBIANCODENAME=jessie
+ENV DEBIAN_FRONTEND noninteractive
+RUN set -x \
+    && apt-get -y update && apt-get -y install curl sudo gnupg \
+    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
+    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && apt-get -y update \
+    && apt-get -y install moonshot-ui
+RUN apt-get -y install moonshot-gss-eap
+RUN apt-get -y install moonshot-trust-router
+RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp
+COPY build_assets/radsec.conf /etc/
+RUN set -x \
+    && sed -i "s/RPP/127.0.0.1/g" /etc/radsec.conf \
+    && adduser trustrouter freerad \
+    && adduser freerad trustrouter \
+    && echo "\$INCLUDE apc_users.txt" >> /etc/freeradius/users \
+    && sed -i "/listen.*/a \
+               limit {\n \
+                   max_connections = 128\n \
+               }" /etc/freeradius/sites-available/abfab-tls \
+    && sed -i "/post-auth {/a \
+                update outer.session-state { \n\
+                  User-Name := &User-Name \n\
+                }" /etc/freeradius/sites-available/inner-tunnel \
+    && sed -i "/proto = tls/a \
+               gss_acceptor_realm_name = APC_REALM\n \
+               limit {\n \
+                   max_connections = 128\n \
+               }" /etc/freeradius/sites-available/abfab-tls \
+    && touch /etc/freeradius/mods-config/files/apc_users.txt
+CMD echo "realm $APC_REALM {}" >> /etc/freeradius/proxy.conf \
+    && sed -i "s/APC_REALM/$APC_REALM/g" /etc/freeradius/sites-available/abfab-tls \
+    && chown freerad /etc/freeradius/certs/ -R \
+    && sudo -u trustrouter -H -b -- tids $TR_GSSNAME \
+    && sudo -u freerad -H -- freeradius -fxx -lstdout

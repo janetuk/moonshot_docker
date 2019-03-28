@@ -1,0 +1,14 @@
+moonshot_saml.post-auth {
+    # Only add SAML when not proxying
+    if (! &reply:Proxy-State) {
+        update reply {
+            SAML-AAA-Assertion = '<saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" IssueInstant="2011-03-19T08:30:00Z" ID="foo" Version="2.0">'
+            SAML-AAA-Assertion += '<saml:Issuer>urn:mace:incommon:osu.edu</saml:Issuer>'
+            SAML-AAA-Assertion += '<saml:Subject><saml:NameID Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient">alice-3344ab</saml:NameID></saml:Subject>'
+            SAML-AAA-Assertion += '<saml:AttributeStatement>'
+            SAML-AAA-Assertion += '<saml:Attribute NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" Name="urn:oid:1.3.6.1.4.1.5923.1.1.1.7"><saml:AttributeValue>moonshot</saml:AttributeValue><saml:AttributeValue>moonshot2</saml:AttributeValue></saml:Attribute>'
+            SAML-AAA-Assertion += '</saml:AttributeStatement>'
+            SAML-AAA-Assertion += '</saml:Assertion>'
+        }
+    }
+}

@@ -1,0 +1,101 @@
+version: '3'
+services:
+  client:
+    hostname: client
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./config/user_credentials.xml:/config/user_credentials.xml
+      - /tmp/.X11-unix/X0:/tmp/.X11-unix/X0
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+  sshserver:
+    hostname: sshserver
+    environment:
+      RPP: idp1
+      USERS: "moonshot"
+    build:
+      context: .
+      dockerfile: Dockerfile.sshserver
+    volumes:
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+  httpserver:
+    hostname: httpserver
+    environment:
+      RPP: idp1
+    build:
+      context: .
+      dockerfile: Dockerfile.httpserver
+    volumes:
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+  idp1:
+    hostname: idp1
+    environment:
+      IDP_REALM: test1.org
+      TR_HOSTNAME: trustrouter
+      TR_GSSNAME: tr@apc.org
+      APC_REALM: apc.org
+    build:
+      context: .
+      dockerfile: Dockerfile.idp
+    volumes:
+      - ./config/ca.pem:/etc/freeradius/certs/ca.pem
+      - ./config/server.pem:/etc/freeradius/certs/server.pem
+      - ./config/server.key:/etc/freeradius/certs/server.key
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+      - ./config/idp1_credential.xml:/credential.xml
+  idp2:
+    hostname: idp2
+    environment:
+      IDP_REALM: test2.org
+      TR_HOSTNAME: trustrouter
+      TR_GSSNAME: tr@apc.org
+      APC_REALM: apc.org
+    build:
+      context: .
+      dockerfile: Dockerfile.idp
+    volumes:
+      - ./config/ca.pem:/etc/freeradius/certs/ca.pem
+      - ./config/server.pem:/etc/freeradius/certs/server.pem
+      - ./config/server.key:/etc/freeradius/certs/server.key
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+      - ./config/idp2_credential.xml:/credential.xml
+  apc:
+    hostname: apc
+    build:
+      context: .
+      dockerfile: Dockerfile.apc
+    environment:
+      APC_REALM: apc.org
+      TR_GSSNAME: tr@apc.org
+    volumes:
+      - ./config/ca.pem:/etc/freeradius/certs/ca.pem
+      - ./config/server.pem:/etc/freeradius/certs/server.pem
+      - ./config/server.key:/etc/freeradius/certs/server.key
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+      - ./config/apc_users.txt:/etc/freeradius/mods-config/files/apc_users.txt
+  trustrouter:
+    hostname: trustrouter
+    build:
+      context: .
+      dockerfile: Dockerfile.tr
+    environment:
+      APC_HOSTNAME: apc
+    volumes:
+      - ./config/ca.pem:/etc/ca.pem
+      - ./config/client.pem:/etc/client.pem
+      - ./config/client.key:/etc/client.key
+      - ./config/tr_credential.xml:/credential.xml
+      - ./config/main.cfg:/etc/trust_router/conf.d/default/main.cfg
+      - ./config/orgs.cfg:/etc/trust_router/conf.d/default/orgs.cfg
