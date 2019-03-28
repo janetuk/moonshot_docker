@@ -24,7 +24,7 @@ Then, you can run the images. Instructions on how to use each resulting images c
 
 For example, to run a Moonshot IDP connected to the Moonshot Playpen infrastructure, you would execute something similar to the following:
 ```
-docker run -ti -e IDP_REALM=my.test.realm -e TR_GSSNAME=trustrouter@apc.test.assent -e TR_HOSTNAME=tr.moonshot-playpen.ti.ja.net -e APC_REALM=apc.test.assent -v $PATH_CA_PEM:/etc/ca.pem -v $PATH_CLIENT_PEM:/etc/client.pem -v $PATH_CLIENT_KEY:/etc/client.key $PATH_CREDENTIAL_XML:/credential.xml -v $PATH_SERVER_PEM:/etc/freeradius/certs/server.pem -v $PATH_SERVER_KEY:/etc/freeradius/certs/server.key -v $PATH_USERS_FILE:/etc/freeradius/mods-config/files/idp_users.txt
+docker run -ti -e IDP_REALM=my.test.realm -e TR_GSSNAME=trustrouter@apc.test.assent -e TR_HOSTNAME=tr.moonshot-playpen.ti.ja.net -e APC_REALM=apc.test.assent -v $PATH_CA_PEM:/etc/ca.pem -v $PATH_CLIENT_PEM:/etc/client.pem -v $PATH_CLIENT_KEY:/etc/client.key -v $PATH_CREDENTIAL_XML:/credential.xml -v $PATH_SERVER_PEM:/etc/freeradius/certs/server.pem -v $PATH_SERVER_KEY:/etc/freeradius/certs/server.key -v $PATH_USERS_FILE:/etc/freeradius/mods-config/files/idp_users.txt moonshot-idp
 ```
 
 ## Docker compose
