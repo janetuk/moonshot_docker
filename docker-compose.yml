@@ -47,9 +47,8 @@ services:
       - ./config/ca.pem:/etc/freeradius/certs/ca.pem
       - ./config/server.pem:/etc/freeradius/certs/server.pem
       - ./config/server.key:/etc/freeradius/certs/server.key
-      - ./config/ca.pem:/etc/ca.pem
-      - ./config/client.pem:/etc/client.pem
-      - ./config/client.key:/etc/client.key
+      - ./config/client.pem:/etc/freeradius/certs/client.pem
+      - ./config/client.key:/etc/freeradius/certs/client.key
       - ./config/idp1_credential.xml:/credential.xml
   idp2:
     hostname: idp2
@@ -65,9 +64,9 @@ services:
       - ./config/ca.pem:/etc/freeradius/certs/ca.pem
       - ./config/server.pem:/etc/freeradius/certs/server.pem
       - ./config/server.key:/etc/freeradius/certs/server.key
-      - ./config/ca.pem:/etc/ca.pem
-      - ./config/client.pem:/etc/client.pem
-      - ./config/client.key:/etc/client.key
+      - ./config/client.pem:/etc/freeradius/certs/client.pem
+      - ./config/client.key:/etc/freeradius/certs/client.key
+
       - ./config/idp2_credential.xml:/credential.xml
   apc:
     hostname: apc
@@ -81,9 +80,9 @@ services:
       - ./config/ca.pem:/etc/freeradius/certs/ca.pem
       - ./config/server.pem:/etc/freeradius/certs/server.pem
       - ./config/server.key:/etc/freeradius/certs/server.key
-      - ./config/ca.pem:/etc/ca.pem
-      - ./config/client.pem:/etc/client.pem
-      - ./config/client.key:/etc/client.key
+      - ./config/client.pem:/etc/freeradius/certs/client.pem
+      - ./config/client.key:/etc/freeradius/certs/client.key
+
       - ./config/apc_users.txt:/etc/freeradius/mods-config/files/apc_users.txt
   trustrouter:
     hostname: trustrouter

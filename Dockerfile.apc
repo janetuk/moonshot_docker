@@ -14,7 +14,7 @@ RUN apt-get -y install moonshot-trust-router
 RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp
 COPY build_assets/radsec.conf /etc/
 RUN set -x \
-    && sed -i "s/RPP/127.0.0.1/g" /etc/radsec.conf \
+    && sed -i "s/RPP/localhost/g" /etc/radsec.conf \
     && adduser trustrouter freerad \
     && adduser freerad trustrouter \
     && echo "\$INCLUDE apc_users.txt" >> /etc/freeradius/users \
@@ -31,7 +31,10 @@ RUN set -x \
                limit {\n \
                    max_connections = 128\n \
                }" /etc/freeradius/sites-available/abfab-tls \
-    && touch /etc/freeradius/mods-config/files/apc_users.txt
+    && touch /etc/freeradius/mods-config/files/apc_users.txt \
+    && ln -s /etc/freeradius/certs/ca.pem /etc/ca.pem \
+    && ln -s /etc/freeradius/certs/client.pem /etc/client.pem \
+    && ln -s /etc/freeradius/certs/client.key /etc/client.key
 CMD echo "realm $APC_REALM {}" >> /etc/freeradius/proxy.conf \
     && sed -i "s/APC_REALM/$APC_REALM/g" /etc/freeradius/sites-available/abfab-tls \
     && chown freerad /etc/freeradius/certs/ -R \

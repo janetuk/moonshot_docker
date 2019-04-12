@@ -4,7 +4,7 @@ trap "echo 'Something went wrong!!!!'" ERR
 
 echo "-----Running Moonshot tests ------"
 docker-compose down -t 0
-docker-compose up -d
+docker-compose up --build -d
 
 echo "-----------------Importing User Credentials-----------------------"
 docker-compose exec -e DISPLAY client dbus-launch moonshot-webp /config/user_credentials.xml
@@ -15,3 +15,4 @@ docker-compose exec -e DISPLAY client dbus-launch ssh -o StrictHostKeyChecking=n
 echo "-----------------Testing Apache --------------------"
 docker-compose exec -e DISPLAY client dbus-launch curl --negotiate -u ":" http://httpserver/protected/hello.cgi
 
+docker-compose stop -t 0
