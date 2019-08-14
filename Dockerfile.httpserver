@@ -2,12 +2,12 @@ ARG DEBIMAGE=debian:8
 FROM $DEBIMAGE
 
 ARG REPO
-ARG DEBIANCODENAME=jessie
+ARG DEBIANCODENAME=debian8
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
-    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-ui
 RUN set -x \

@@ -2,12 +2,12 @@ ARG DEBIMAGE=debian:8
 FROM $DEBIMAGE
 
 ARG REPO
-ARG DEBIANCODENAME=jessie
+ARG DEBIANCODENAME=debian8
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
-    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-ui
 RUN apt-get -y install moonshot-gss-eap
@@ -15,9 +15,8 @@ RUN apt-get -y install python-pip libpython-dev libkrb5-dev \
     && pip install gssapi
 COPY build_assets/pynegotiate_client.py /
 RUN set -x \
-    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME openssh" > /etc/apt/sources.list.d/moonshot.list \
-    && echo "Package: *\nPin: release o=moonshot\nPin-Priority: 1200" > /etc/apt/preferences.d/moonshot \
+    && sed -i "s/# deb/deb/g" /etc/apt/sources.list.d/moonshot.list \
     && apt-get -y update && apt-get -y install openssh-client \
-    && apt-get -y install gnome-keyring \
+    && apt-get -y install gnome-keyring keyutils \
     && mkdir -p /root/.cache
 CMD sleep infinity

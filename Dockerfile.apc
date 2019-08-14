@@ -1,22 +1,20 @@
 ARG DEBIMAGE=debian:8
 FROM $DEBIMAGE
 ARG REPO
-ARG DEBIANCODENAME=jessie
+ARG DEBIANCODENAME=debian8
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
-    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-ui
 RUN apt-get -y install moonshot-gss-eap
 RUN apt-get -y install moonshot-trust-router
-RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp
+RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp freeradius-moonshot-saml
 COPY build_assets/radsec.conf /etc/
 RUN set -x \
     && sed -i "s/RPP/localhost/g" /etc/radsec.conf \
-    && adduser trustrouter freerad \
-    && adduser freerad trustrouter \
     && echo "\$INCLUDE apc_users.txt" >> /etc/freeradius/users \
     && sed -i "/listen.*/a \
                limit {\n \

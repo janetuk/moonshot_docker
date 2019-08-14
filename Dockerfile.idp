@@ -2,23 +2,21 @@ ARG DEBIMAGE=debian:8
 FROM $DEBIMAGE
 
 ARG REPO
-ARG DEBIANCODENAME=jessie
+ARG DEBIANCODENAME=debian8
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && echo "deb http://repository.project-moonshot.org/$REPO/debian-moonshot/ $DEBIANCODENAME main" > /etc/apt/sources.list.d/moonshot.list \
-    && curl "http://repository.project-moonshot.org/debian-moonshot/key.gpg" | apt-key add - \
+    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-ui
 RUN apt-get -y install moonshot-gss-eap
 RUN apt-get -y install moonshot-trust-router
-RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp
-COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/idp_users.txt /
+RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp freeradius-moonshot-saml
+COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/idp_users.txt build_assets/abfab_idp.conf /
 RUN set -x \
     && cp /radsec.conf /etc \
     && sed -i "s/RPP/localhost/g" /etc/radsec.conf \
-    && adduser trustrouter freerad \
-    && adduser freerad trustrouter \
     && echo "\$INCLUDE idp_users.txt" >> /etc/freeradius/users \
     && sed -i "/listen.*/a \
                limit {\n \
@@ -39,6 +37,8 @@ RUN set -x \
     && sed -i "/pap/a moonshot_totp" /etc/freeradius/sites-available/inner-tunnel \
     && cp /moonshot_saml /etc/freeradius/policy.d/ \
     && cp /idp_users.txt /etc/freeradius/mods-config/files/ \
+    && cp /abfab_idp.conf /etc/ \
+    && ln -s /etc/freeradius/mods-available/abfab_idp /etc/freeradius/mods-enabled/ \
     && ln -s /etc/freeradius/certs/ca.pem /etc/ca.pem \
     && ln -s /etc/freeradius/certs/client.pem /etc/client.pem \
     && ln -s /etc/freeradius/certs/client.key /etc/client.key
