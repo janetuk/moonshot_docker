@@ -8,8 +8,7 @@ RUN set -x \
     && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
     && dpkg -i *.deb \
     && apt-get -y update \
-    && apt-get -y install moonshot-ui
-RUN apt-get -y install moonshot-gss-eap
+    && apt-get -y install moonshot-noshib
 RUN apt-get -y install moonshot-trust-router
 RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp freeradius-moonshot-saml
 COPY build_assets/radsec.conf /etc/

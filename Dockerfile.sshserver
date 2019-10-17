@@ -9,8 +9,7 @@ RUN set -x \
     && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
     && dpkg -i *.deb \
     && apt-get -y update \
-    && apt-get -y install moonshot-ui
-RUN apt-get -y install moonshot-gss-eap
+    && apt-get -y install moonshot
 RUN set -x \
     && sed -i "s/# deb/deb/g" /etc/apt/sources.list.d/moonshot.list \
     && apt-get -y update \
