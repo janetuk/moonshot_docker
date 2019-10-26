@@ -1,7 +1,8 @@
-ARG DEBIMAGE=debian:8
+ARG DEBIMAGE=debian:10
 FROM $DEBIMAGE
+
 ARG REPO
-ARG DEBIANCODENAME=debian8
+ARG DEBIANCODENAME=debian10
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install curl sudo gnupg \
