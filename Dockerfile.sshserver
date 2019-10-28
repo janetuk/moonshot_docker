@@ -1,0 +1,29 @@
+ARG DEBIMAGE=debian:10
+FROM $DEBIMAGE
+
+ARG REPO
+ARG DEBIANCODENAME=debian10
+ENV DEBIAN_FRONTEND noninteractive
+RUN set -x \
+    && apt-get -y update && apt-get -y install curl sudo gnupg \
+    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && dpkg -i *.deb \
+    && apt-get -y update \
+    && apt-get -y install moonshot
+RUN set -x \
+    && sed -i "s/# deb/deb/g" /etc/apt/sources.list.d/moonshot.list \
+    && apt-get -y update \
+    && apt-get -y install openssh-server libapache2-mod-shib2 \
+    && mkdir /var/run/sshd \
+    && mkdir -p /etc/shibboleth \
+    && touch /etc/shibboleth/console.logger \
+    && sed -i 's/log4j.rootCategory=WARN/log4j.rootCategory=NONE/g' /etc/shibboleth/console.logger
+COPY build_assets/radsec.conf /etc
+RUN set -x \
+    && sed -i "s/entitlement/local-login-user/g" /etc/shibboleth/attribute-map.xml \
+    && echo "GSSAPIAuthentication yes" >> /etc/ssh/sshd_config \
+    && echo "GSSAPIKeyExchange no" >> /etc/ssh/sshd_config \
+    && echo "GSSAPIStrictAcceptorCheck yes" >> /etc/ssh/sshd_config
+CMD sed -i "s/RPP/$RPP/g" /etc/radsec.conf \
+    && for i in $(echo $USERS | tr ":" "\n"); do useradd -m $i; done \
+    && /usr/sbin/sshd -D

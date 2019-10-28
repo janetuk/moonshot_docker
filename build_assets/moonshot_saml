@@ -1,0 +1,6 @@
+moonshot_saml.post-auth {
+    # Only add SAML when not proxying
+    if (! &config:Proxy-To-Realm) {
+        abfab_idp
+    }
+}
