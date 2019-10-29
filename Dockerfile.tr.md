@@ -1,4 +1,4 @@
-This image provides a ready-to-use Trust Router server. It is configured though a set of environment variables and volumes described below:
+This image provides a ready-to-use Trust Router server. It is configured through a set of environment variables and volumes described below:
 
 ## Environment variables:
 * `APC_HOSTNAME`. Hostname of the APC server.

@@ -1,6 +1,4 @@
-This image provides a ready-to-use APC. It is configured thought a set of environment variables and volumes described below:
-
-This image provides a ready-to-use Moonshot IDP. It is configured thought a set of environment variables and volumes described below:
+This image provides a ready-to-use APC. It is configured through a set of environment variables and volumes described below:
 
 ## Environment variables:
 * `APC_REALM`. The realm for this APC.

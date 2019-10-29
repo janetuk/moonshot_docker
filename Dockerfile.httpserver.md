@@ -1,4 +1,4 @@
-This image provides a ready-to-use Moonshot-enabled HTTP server. It is configured thought a set of environment variables and volumes described below:
+This image provides a ready-to-use Moonshot-enabled HTTP server. It is configured through a set of environment variables and volumes described below:
 
 ## Environment variables:
 * `RPP`. The IP address or hostname of the RPP.

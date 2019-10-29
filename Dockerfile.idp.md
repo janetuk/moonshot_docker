@@ -1,4 +1,4 @@
-This image provides a ready-to-use Moonshot IDP. It is configured thought a set of environment variables and volumes described below:
+This image provides a ready-to-use Moonshot IDP. It is configured through a set of environment variables and volumes described below:
 
 ## Environment variables:
 * `IDP_REALM`. The realm for this IDP.
