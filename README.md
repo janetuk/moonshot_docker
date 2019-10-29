@@ -2,7 +2,7 @@
 This repository provides the required Dockerfiles to set up a fully docker-based Moonshot infrastructure.
 
 # How to use it
-There are 3 different ways in which you can use these images:
+There are 2 different ways in which you can use these images:
 
 ## Build the images individually and use them directly
 The most advanced way of using these images is to build them individually and run them to create your own Moonshot infrastructure.
@@ -28,7 +28,7 @@ For example, to run a Moonshot IDP connected to the Moonshot Playpen infrastruct
 docker run -ti -e IDP_REALM=my.test.realm -e TR_GSSNAME=trustrouter@apc.test.assent -e TR_HOSTNAME=tr.moonshot-playpen.ti.ja.net -e APC_REALM=apc.test.assent -v $PATH_CA_PEM:/etc/ca.pem -v $PATH_CLIENT_PEM:/etc/client.pem -v $PATH_CLIENT_KEY:/etc/client.key -v $PATH_CREDENTIAL_XML:/credential.xml -v $PATH_SERVER_PEM:/etc/freeradius/certs/server.pem -v $PATH_SERVER_KEY:/etc/freeradius/certs/server.key -v $PATH_USERS_FILE:/etc/freeradius/mods-config/files/idp_users.txt moonshot-idp
 ```
 
-## Docker-compose based demo
+## Use the shipped Docker-compose based demo
 A second way of using these images is by using the shipped Docker-compose file.
 It set ups a simple Moonshot test network with the following components:
 * One APC
