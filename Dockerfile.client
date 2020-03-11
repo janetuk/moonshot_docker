@@ -13,6 +13,7 @@ RUN set -x \
 RUN apt-get -y install python-pip libpython-dev libkrb5-dev \
     && pip install gssapi
 COPY build_assets/pynegotiate_client.py /
+RUN apt-get -y install curl
 RUN set -x \
     && sed -i "s/# deb/deb/g" /etc/apt/sources.list.d/moonshot.list \
     && apt-get -y update && apt-get -y install openssh-client \
