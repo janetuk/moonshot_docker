@@ -5,8 +5,8 @@ ARG REPO=""
 ARG DEBIANCODENAME=debian10
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
-    && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && apt-get -y update && apt-get -y install wget sudo gnupg \
+    && wget "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
     && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-noshib

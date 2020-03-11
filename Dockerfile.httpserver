@@ -5,13 +5,12 @@ ARG REPO=""
 ARG DEBIANCODENAME=debian10
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
-    && apt-get -y update && apt-get -y install curl sudo gnupg \
-    && curl -O "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && apt-get -y update && apt-get -y install wget sudo gnupg \
+    && wget "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
     && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot-noshib
 RUN set -x \
-    && apt-get -y remove curl \
     && apt-get -y install apache2 libapache2-mod-auth-gssapi \
     && mkdir -p /var/www/html/protected
 COPY build_assets/radsec.conf build_assets/moonshot.conf build_assets/hello.cgi build_assets/local-attributes.json /
