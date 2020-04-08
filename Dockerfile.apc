@@ -11,7 +11,7 @@ RUN set -x \
     && apt-get -y update \
     && apt-get -y install moonshot-noshib
 RUN apt-get -y install moonshot-trust-router
-RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp freeradius-moonshot-saml
+RUN apt-get -y install freeradius-abfab
 COPY build_assets/radsec.conf /etc/
 RUN set -x \
     && sed -i "s/RPP/localhost/g" /etc/radsec.conf \

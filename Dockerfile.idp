@@ -11,7 +11,8 @@ RUN set -x \
     && apt-get -y update \
     && apt-get -y install moonshot-noshib
 RUN apt-get -y install moonshot-trust-router
-RUN apt-get -y install freeradius-abfab freeradius-moonshot-totp freeradius-moonshot-saml
+RUN apt-get -y install freeradius-abfab
+RUN apt-get -y install freeradius-moonshot-saml freeradius-moonshot-totp
 COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/idp_users.txt build_assets/abfab_idp.conf /
 RUN set -x \
     && cp /radsec.conf /etc \
