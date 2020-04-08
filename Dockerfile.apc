@@ -26,6 +26,7 @@ RUN set -x \
                 }" /etc/freeradius/sites-available/inner-tunnel \
     && sed -i "/proto = tls/a \
                gss_acceptor_realm_name = APC_REALM\n \
+               trust_router_coi = APC_REALM\n \
                limit {\n \
                    max_connections = 128\n \
                }" /etc/freeradius/sites-available/abfab-tls \
