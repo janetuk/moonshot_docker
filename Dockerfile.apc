@@ -30,6 +30,8 @@ RUN set -x \
                    max_connections = 128\n \
                }" /etc/freeradius/sites-available/abfab-tls \
     && touch /etc/freeradius/mods-config/files/apc_users.txt \
+    && sed -zi "s/default_eap_type = md5/default_eap_type = ttls/" /etc/freeradius/mods-available/eap \
+    && sed -zi "s/default_eap_type = md5/default_eap_type = gtc/" /etc/freeradius/mods-available/eap \
     && ln -s /etc/freeradius/certs/ca.pem /etc/ca.pem \
     && ln -s /etc/freeradius/certs/client.pem /etc/client.pem \
     && ln -s /etc/freeradius/certs/client.key /etc/client.key
