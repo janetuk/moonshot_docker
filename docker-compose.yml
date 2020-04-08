@@ -44,6 +44,7 @@ services:
       context: .
       dockerfile: Dockerfile.idp
     volumes:
+      - ./config/idp_users.txt:/etc/freeradius/mods-config/files/idp_users.txt
       - ./config/ca.pem:/etc/freeradius/certs/ca.pem
       - ./config/server.pem:/etc/freeradius/certs/server.pem
       - ./config/server.key:/etc/freeradius/certs/server.key
@@ -61,6 +62,7 @@ services:
       context: .
       dockerfile: Dockerfile.idp
     volumes:
+      - ./config/idp_users.txt:/etc/freeradius/mods-config/files/idp_users.txt
       - ./config/ca.pem:/etc/freeradius/certs/ca.pem
       - ./config/server.pem:/etc/freeradius/certs/server.pem
       - ./config/server.key:/etc/freeradius/certs/server.key
@@ -82,8 +84,8 @@ services:
       - ./config/server.key:/etc/freeradius/certs/server.key
       - ./config/client.pem:/etc/freeradius/certs/client.pem
       - ./config/client.key:/etc/freeradius/certs/client.key
-
       - ./config/apc_users.txt:/etc/freeradius/mods-config/files/apc_users.txt
+
   trustrouter:
     hostname: trustrouter
     build:

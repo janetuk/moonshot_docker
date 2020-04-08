@@ -36,7 +36,7 @@ RUN set -x \
     && ln -s /etc/freeradius/mods-available/moonshot_totp /etc/freeradius/mods-enabled/ \
     && sed -i "/pap/a moonshot_totp" /etc/freeradius/sites-available/inner-tunnel \
     && cp /moonshot_saml /etc/freeradius/policy.d/ \
-    && cp /idp_users.txt /etc/freeradius/mods-config/files/ \
+    && touch /etc/freeradius/mods-config/files/idp_users.txt  \
     && cp /abfab_idp.conf /etc/ \
     && ln -s /etc/freeradius/mods-available/abfab_idp /etc/freeradius/mods-enabled/ \
     && ln -s /etc/freeradius/certs/ca.pem /etc/ca.pem \

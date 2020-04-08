@@ -1,2 +1,0 @@
-alice    Cleartext-Password := "alicepwd"
-bob    Cleartext-Password := "bobpwd",Moonshot-OTP-Secret := "7MR674BRPXXNYGGMPFA52MW6GSMA6JQL"

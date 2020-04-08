@@ -1,0 +1,2 @@
+alice    Crypt-Password := "$6$ZUDX9x7cFdLvppzp$J2guXC0NTw4ovKvc5tqJIT4XF9NiZOy/jNTSY.iihyD7iVv3McPwL2TWYTO7F31oG9EwAa389mYyhRqOIi3xq0"
+bob    Cleartext-Password := "bobpwd",Moonshot-OTP-Secret := "7MR674BRPXXNYGGMPFA52MW6GSMA6JQL"
