@@ -13,7 +13,7 @@ RUN set -x \
 RUN apt-get -y install moonshot-trust-router
 RUN apt-get -y install freeradius-abfab
 RUN apt-get -y install freeradius-moonshot-saml freeradius-moonshot-totp
-COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/idp_users.txt build_assets/abfab_idp.conf /
+COPY build_assets/radsec.conf build_assets/moonshot_saml build_assets/abfab_idp.conf /
 RUN set -x \
     && cp /radsec.conf /etc \
     && sed -i "s/RPP/localhost/g" /etc/radsec.conf \
