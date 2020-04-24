@@ -35,9 +35,9 @@ RUN set -x \
     && sed -i "/proxy server {/a dynamic = yes" /etc/freeradius/proxy.conf \
     && sed -i "/post-auth {/a moonshot_saml" /etc/freeradius/sites-available/abfab-tr-idp \
     && ln -s /etc/freeradius/mods-available/moonshot_totp /etc/freeradius/mods-enabled/ \
-    && sed -zi "s/pap/pap\nmoonshot_totp/" /etc/freeradius/sites-available/inner-tunnel \
-    && sed -zi "s/default_eap_type = md5/default_eap_type = ttls/" /etc/freeradius/mods-available/eap \
-    && sed -zi "s/default_eap_type = md5/default_eap_type = gtc/" /etc/freeradius/mods-available/eap \
+    && sed -i "/Auth-Type PAP/a moonshot_totp" /etc/freeradius/sites-available/inner-tunnel \
+    && sed -i "0,/default_eap_type = md5/s//default_eap_type = ttls/" /etc/freeradius/mods-available/eap \
+    && sed -i "0,/default_eap_type = md5/s//default_eap_type = gtc/" /etc/freeradius/mods-available/eap \
     && cp /moonshot_saml /etc/freeradius/policy.d/ \
     && touch /etc/freeradius/mods-config/files/idp_users.txt  \
     && cp /abfab_idp.conf /etc/ \

@@ -13,10 +13,8 @@ RUN set -x \
 RUN apt-get -y install moonshot-trust-router
 COPY build_assets/radsec.conf /etc/
 RUN set -x \
-    && mkdir -p /etc/trust_router/conf.d/default/ \
-    && mkdir -p /etc/shibboleth \
-    && touch /etc/shibboleth/console.logger \
-    && sed -i 's/log4j.rootCategory=WARN/log4j.rootCategory=NONE/g' /etc/shibboleth/console.logger
+    && rm -fr /etc/trust_router/conf.d/default/ \
+    && mkdir -p /etc/trust_router/conf.d/default/
 CMD chown trustrouter /etc/trust_router/conf.d/default/ -R \
     && sed -i "s/RPP/$APC_HOSTNAME/g" /etc/radsec.conf \
     && sudo -u trustrouter -H -- moonshot-webp -f /credential.xml \

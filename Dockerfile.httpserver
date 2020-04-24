@@ -21,5 +21,7 @@ RUN set -x \
     && cp /local-attributes.json /etc/moonshot/ \
     && a2enmod cgi \
     && chmod a+x /var/www/html/protected/hello.cgi
-CMD sed -i "s/RPP/$RPP/g" /etc/radsec.conf \
+CMD set -x \
+    && sed -i "s/RPP/$RPP/g" /etc/radsec.conf \
+    && sed -i "s/HOSTNAME/$HOSTNAME/g" /etc/apache2/conf-enabled/moonshot.conf \
     && apachectl -DFOREGROUND
