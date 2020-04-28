@@ -2,6 +2,7 @@ version: '3'
 services:
   client:
     hostname: client
+    image: jiscmoonshot/client
     cap_add:
       - IPC_LOCK
     volumes:
@@ -12,6 +13,7 @@ services:
       dockerfile: Dockerfile.client
   sshserver:
     hostname: sshserver
+    image: jiscmoonshot/sshserver
     environment:
       RPP: idp1
       USERS: "moonshot"
@@ -24,6 +26,7 @@ services:
       - ./config/client.key:/etc/client.key
   httpserver:
     hostname: httpserver
+    image: jiscmoonshot/httpserver
     environment:
       RPP: idp1
     build:
@@ -35,6 +38,7 @@ services:
       - ./config/client.key:/etc/client.key
   idp1:
     hostname: idp1
+    image: jiscmoonshot/idp
     environment:
       IDP_REALM: test1.org
       TR_HOSTNAME: trustrouter
@@ -72,6 +76,7 @@ services:
       - ./config/idp2_credential.xml:/credential.xml
   apc:
     hostname: apc
+    image: jiscmoonshot/apc
     build:
       context: .
       dockerfile: Dockerfile.apc
@@ -88,6 +93,7 @@ services:
 
   trustrouter:
     hostname: trustrouter
+    image: jiscmoonshot/trustrouter
     build:
       context: .
       dockerfile: Dockerfile.tr
