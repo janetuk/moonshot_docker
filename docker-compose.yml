@@ -11,6 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
+
   sshserver:
     hostname: sshserver
     image: jiscmoonshot/sshserver
@@ -24,6 +25,7 @@ services:
       - ./config/ca.pem:/etc/ca.pem
       - ./config/client.pem:/etc/client.pem
       - ./config/client.key:/etc/client.key
+
   httpserver:
     hostname: httpserver
     image: jiscmoonshot/httpserver
@@ -36,6 +38,7 @@ services:
       - ./config/ca.pem:/etc/ca.pem
       - ./config/client.pem:/etc/client.pem
       - ./config/client.key:/etc/client.key
+
   idp1:
     hostname: idp1
     image: jiscmoonshot/idp
@@ -55,8 +58,10 @@ services:
       - ./config/client.pem:/etc/freeradius/certs/client.pem
       - ./config/client.key:/etc/freeradius/certs/client.key
       - ./config/idp1_credential.xml:/credential.xml
+
   idp2:
     hostname: idp2
+    image: jiscmoonshot/idp
     environment:
       IDP_REALM: test2.org
       TR_HOSTNAME: trustrouter
@@ -72,8 +77,8 @@ services:
       - ./config/server.key:/etc/freeradius/certs/server.key
       - ./config/client.pem:/etc/freeradius/certs/client.pem
       - ./config/client.key:/etc/freeradius/certs/client.key
-
       - ./config/idp2_credential.xml:/credential.xml
+
   apc:
     hostname: apc
     image: jiscmoonshot/apc
