@@ -3,10 +3,11 @@ FROM $DEBIMAGE
 
 ARG REPO=""
 ARG DEBIANCODENAME=debian10
+ARG FOLDER="debian-moonshot"
 ENV DEBIAN_FRONTEND noninteractive
 RUN set -x \
     && apt-get -y update && apt-get -y install wget sudo gnupg \
-    && wget "https://repository.project-moonshot.org/$REPO/debian-moonshot/moonshot-repository.$DEBIANCODENAME.deb" \
+    && wget "https://repository.project-moonshot.org/$REPO/$FOLDER/moonshot-repository.$DEBIANCODENAME.deb" \
     && dpkg -i *.deb \
     && apt-get -y update \
     && apt-get -y install moonshot
@@ -25,5 +26,5 @@ RUN set -x \
     && echo "GSSAPIKeyExchange no" >> /etc/ssh/sshd_config \
     && echo "GSSAPIStrictAcceptorCheck yes" >> /etc/ssh/sshd_config
 CMD sed -i "s/RPP/$RPP/g" /etc/radsec.conf \
-    && for i in $(echo $USERS | tr ":" "\n"); do useradd -m $i; done \
+    && for i in $(echo $USERS | tr ":" "\n"); do useradd -m $i || true; done \
     && /usr/sbin/sshd -D

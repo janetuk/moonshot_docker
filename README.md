@@ -41,7 +41,8 @@ It set ups a simple Moonshot test network with the following components:
 ### Building and running the demo
 To build and run the infrastructure, just use:
 ```
-docker-compose up -d --force-recreate --build
+docker-compose build --pull
+docker-compose up -d --force-recreate
 ```
 
 ### Executing commands
